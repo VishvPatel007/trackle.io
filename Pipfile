@@ -9,6 +9,10 @@ name = "pypi"
 flask = "*"
 opencv-python = "*"
 pyautogui = "*"
+pyobjc-core = "*"
+pyobjc = "*"
+numpy = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "2.7"
