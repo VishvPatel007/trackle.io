@@ -15,6 +15,7 @@ numpy = "*"
 matplotlib = "*"
 imutils = "*"
 statistics = "*"
+speechrecognition = "*"
 
 [requires]
 python_version = "2.7"
