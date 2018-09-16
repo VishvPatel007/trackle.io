@@ -71,3 +71,6 @@ words = recognize_speech_from_mic(r, m)
 print("User said: {}".format(words["transcription"]))
 
 pya.typewrite(words["transcription"])
+
+
+pya.locateAllOnScreen()
