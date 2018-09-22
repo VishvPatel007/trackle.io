@@ -39,5 +39,8 @@ words = recognize_speech_from_mic(r, m)
 while words["transcription"] != "stop":
     words = recognize_speech_from_mic(r, m)
     print("User said: {}".format(words["transcription"]))
+    if words["transcription"] == "click":
+        pya.click()
+
     pya.typewrite(words["transcription"])
    
