@@ -65,12 +65,14 @@ def recognize_speech_from_mic(recognizer, microphone):
         response["error"] = "Unable to recognize speech"
 
     return response
-r = sr.Recognizer()
-m = sr.Microphone()
-words = recognize_speech_from_mic(r, m)
-print("User said: {}".format(words["transcription"]))
+    
+def listen():
+    r = sr.Recognizer()
+    m = sr.Microphone()
+    words = recognize_speech_from_mic(r, m)
+    print("User said: {}".format(words["transcription"]))
 
-pya.typewrite(words["transcription"])
+    pya.typewrite(words["transcription"])
 
 
-pya.locateAllOnScreen()
+    pya.locateAllOnScreen()

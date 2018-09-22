@@ -1,5 +1,7 @@
 from Tkinter import *        
 import tkMessageBox
+import click
+import main
 
 
 speech = False
@@ -27,8 +29,10 @@ def chooseClick():
     
     if clickType.get() == "Key":
         name = "You have selected key input with the character '" + inType.get() +"'."
+        main.setInput(inType.get())
     else:
         name = "You have selected wink input."
+        main.clearInput()
     labelText2.set(name)
     return
 
@@ -37,67 +41,69 @@ def speechSet():
     if speech == False:
         name = "The speech to text function is on."
         speech = True
+        click.enableDisable()
     else:
         name = "The speech to text function is off."
         speech = False
+        click.enableDisable()
     labelText3.set(name)
  
 
 
-    
-app = Tk()
-app.title("trackle.io")
-app.geometry('450x550+100+50')
-app.configure(background='white')
+def init():    
+    app = Tk()
+    app.title("trackle.io")
+    app.geometry('450x550+100+50')
+    app.configure(background='white')
 
-labelText = StringVar()
-labelText.set("Welcome to trackle.io.\n\n This application is a full keyboard and mouse replacement\nthat uses speech to text input and\neither a key input or wink to register a 'click'.")
-label1 = Label(app, textvariable=labelText, height=6)
-label1.configure(background='white')
-label1.pack()
+    labelText = StringVar()
+    labelText.set("Welcome to trackle.io.\n\n This application is a full keyboard and mouse replacement\nthat uses speech to text input and\neither a key input or wink to register a 'click'.")
+    label1 = Label(app, textvariable=labelText, height=6)
+    label1.configure(background='white')
+    label1.pack()
 
-button2 = Button(app, text="Learn more", width=20, command=openInfo)
-button2.pack(padx=15, pady=15)
+    button2 = Button(app, text="Learn more", width=20, command=openInfo)
+    button2.pack(padx=15, pady=15)
 
-labelText2 = StringVar()
-labelText2.set("Choose a 'click' type to get started.")
-label2 = Label(app, textvariable=labelText2, height=4)
-label2.configure(background='white')
-label2.pack()
+    labelText2 = StringVar()
+    labelText2.set("Choose a 'click' type to get started.")
+    label2 = Label(app, textvariable=labelText2, height=4)
+    label2.configure(background='white')
+    label2.pack()
 
-clickType = StringVar()
-clickType.set(None)
-radio1 = Radiobutton(app, text="Wink", value="Wink", variable = clickType).pack()
+    clickType = StringVar()
+    clickType.set(None)
+    radio1 = Radiobutton(app, text="Wink", value="Wink", variable = clickType).pack()
 
-radio2 = Radiobutton(app, text="Key (enter the key below)", value="Key", variable = clickType).pack()
+    radio2 = Radiobutton(app, text="Key (enter the key below)", value="Key", variable = clickType).pack()
 
-keyType = StringVar(None)
-inType = Entry(app, textvariable=keyType)
-inType.configure(background='white')
-inType.pack()
-
-
-button1 = Button(app, text="Start", width=20, command=chooseClick)
-button1.pack(padx=15, pady=15)
-
-labelText3 = StringVar()
-labelText3.set("The speech to text function is off.")
-label3 = Label(app, textvariable=labelText3, height=2)
-label3.configure(background='white')
-
-label3.pack()
-
-button2 = Button(app, text="Speech to text on/off", width=20, command=speechSet)
-button2.pack(padx=15, pady=5)
+    keyType = StringVar(None)
+    inType = Entry(app, textvariable=keyType)
+    inType.configure(background='white')
+    inType.pack()
 
 
-button3 = Button(app, text="Exit", width=10, command=app.destroy)
-button3.pack(padx=15, pady=25)
+    button1 = Button(app, text="Start", width=20, command=chooseClick)
+    button1.pack(padx=15, pady=15)
 
-photo = PhotoImage(file = 'trackle.pbm')
-label4 = Label(image=photo)
-label4.image = photo
-label4.configure(background='white')
-label4.pack()
+    labelText3 = StringVar()
+    labelText3.set("The speech to text function is off.")
+    label3 = Label(app, textvariable=labelText3, height=2)
+    label3.configure(background='white')
 
-app.mainloop()
+    label3.pack()
+
+    button2 = Button(app, text="Speech to text on/off", width=20, command=speechSet)
+    button2.pack(padx=15, pady=5)
+
+
+    button3 = Button(app, text="Exit", width=10, command=app.destroy)
+    button3.pack(padx=15, pady=25)
+
+    photo = PhotoImage(file = 'trackle.pbm')
+    label4 = Label(image=photo)
+    label4.image = photo
+    label4.configure(background='white')
+    label4.pack()
+
+    app.mainloop()

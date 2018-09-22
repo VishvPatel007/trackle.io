@@ -12,8 +12,17 @@ xLocations = []
 yLocations = []
 
 pyautogui.FAILSAFE = False
+KEY_INPUT = False
+KEY = ''
 
 cap = cv2.VideoCapture(0)
+
+def setInput(key):
+    KEY = key
+    KEY_INPUT = True
+
+def clearInput():
+    KEY_INPUT = False
 
 def stabilize(xLocations, yLocations):
     if len(xLocations) > 5:
@@ -60,45 +69,50 @@ def getLeftEye(eyes):
     else:
         return eyes[leftmostIndex]
 
-while 1:
-    ret, img = cap.read()
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+def display(): 
+    while 1:
+        ret, img = cap.read()
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
-    for (x,y,w,h) in faces:
-        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-        roi_gray = gray[y:y+h, x:x+w]
-        roi_color = img[y:y+h, x:x+w]
-    
-        eyes = eye_cascade.detectMultiScale(roi_gray)
-    
-        if len(eyes) > 0 and len(eyes[0]) > 0:
-            leftEye = getLeftEye(eyes)
-            leftEyeImg = img[leftEye[1]+y:leftEye[1]+y+leftEye[3], leftEye[0]+x:leftEye[0]+x+leftEye[2]]
-            if leftEye[2] > 0 and leftEye[3] > 0:
-                cv2.imshow("cropped", leftEyeImg)
-                leftEyeGray = cv2.cvtColor(leftEyeImg, cv2.COLOR_BGR2GRAY)
+        if KEY_INPUT:
+            if keyboard.is_pressed(KEY):
+                pyautogui.click()
 
-                cv2.rectangle(roi_color, (leftEye[0],leftEye[1]), (leftEye[0]+leftEye[2], leftEye[1]+leftEye[3]), (0, 255, 0), 2)
-                circles = cv2.HoughCircles(leftEyeGray,cv2.HOUGH_GRADIENT,1, 20, param1=30, param2=15, minRadius=0, maxRadius=0)
-                print(circles)
-                if isinstance(circles, (list, tuple, np.ndarray)):
-                    circles = np.uint16(np.around(circles))
-                    curCircle = detectIris(leftEyeGray, circles)
-                    xLocations.append(curCircle[0] + leftEye[0] + x)
-                    yLocations.append(curCircle[1] +  leftEye[1] + y)
-                    curX, curY = stabilize(xLocations, yLocations)
-                    cv2.circle(img,(curX, curY),leftEye[2],(0,255,0),2)
-                    cv2.circle(img,(curX, curY),2,(0,0,255),3)
-                    mouseX, mouseY = pyautogui.position()
-                    if curX + x - mouseX >= 5 or curY + y - mouseY >= 5:
-                        pyautogui.moveRel((curX + x - mouseX) * 1.5, (curY + y - mouseY) * 1.5)
+        for (x,y,w,h) in faces:
+            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = img[y:y+h, x:x+w]
+        
+            eyes = eye_cascade.detectMultiScale(roi_gray)
+        
+            if len(eyes) > 0 and len(eyes[0]) > 0:
+                leftEye = getLeftEye(eyes)
+                leftEyeImg = img[leftEye[1]+y:leftEye[1]+y+leftEye[3], leftEye[0]+x:leftEye[0]+x+leftEye[2]]
+                if leftEye[2] > 0 and leftEye[3] > 0:
+                    cv2.imshow("cropped", leftEyeImg)
+                    leftEyeGray = cv2.cvtColor(leftEyeImg, cv2.COLOR_BGR2GRAY)
 
-    cv2.imshow('img',img)
-    k = cv2.waitKey(30) & 0xff
-    if k == 27:
-        break
+                    cv2.rectangle(roi_color, (leftEye[0],leftEye[1]), (leftEye[0]+leftEye[2], leftEye[1]+leftEye[3]), (0, 255, 0), 2)
+                    circles = cv2.HoughCircles(leftEyeGray,cv2.HOUGH_GRADIENT,1, 20, param1=30, param2=15, minRadius=0, maxRadius=0)
+                    print(circles)
+                    if isinstance(circles, (list, tuple, np.ndarray)):
+                        circles = np.uint16(np.around(circles))
+                        curCircle = detectIris(leftEyeGray, circles)
+                        xLocations.append(curCircle[0] + leftEye[0] + x)
+                        yLocations.append(curCircle[1] +  leftEye[1] + y)
+                        curX, curY = stabilize(xLocations, yLocations)
+                        cv2.circle(img,(curX, curY),leftEye[2],(0,255,0),2)
+                        cv2.circle(img,(curX, curY),2,(0,0,255),3)
+                        mouseX, mouseY = pyautogui.position()
+                        if curX + x - mouseX >= 5 or curY + y - mouseY >= 5:
+                            pyautogui.moveRel((curX + x - mouseX) * 1.5, (curY + y - mouseY) * 1.5)
 
-cap.release()
-cv2.destroyAllWindows()
+        cv2.imshow('img',img)
+        k = cv2.waitKey(30) & 0xff
+        if k == 27:
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
 

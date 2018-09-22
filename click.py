@@ -1,6 +1,10 @@
 import speech_recognition as sr
 import pyautogui as pya
 
+running = False
+
+def enableDisable():
+    running = not running
 
 def recognize_speech_from_mic(recognizer, microphone):
     # check that recognizer and microphone arguments are appropriate type
@@ -37,10 +41,17 @@ m = sr.Microphone()
 words = recognize_speech_from_mic(r, m)
 
 while words["transcription"] != "stop":
+<<<<<<< HEAD
     words = recognize_speech_from_mic(r, m)
     print("User said: {}".format(words["transcription"]))
     if words["transcription"] == "click":
         pya.click()
 
     pya.typewrite(words["transcription"])
+=======
+    if running:
+        words = recognize_speech_from_mic(r, m)
+        print("User said: {}".format(words["transcription"]))
+        pya.typewrite(words["transcription"])
+>>>>>>> 065705aa2409d52d50d8dc149416d2ebffeb3417
    
